@@ -13,4 +13,7 @@ router.delete("/:id", deleteArticle);
 // get particular article by id
 router.get("/:id", getArticle);
 
+// create an article
+router.post("/", createArticle)
+
 module.exports = router;

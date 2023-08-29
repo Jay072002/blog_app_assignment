@@ -6,12 +6,12 @@ let baseUrl = app_url;
 export const authApi = createApi({
     reducerPath: "authApi",
     baseQuery: fetchBaseQuery({
-        baseUrl: `${baseUrl}`,
+        baseUrl: `${baseUrl}/api/`,
     }),
     endpoints: (builder) => ({
         login: builder.mutation({
             query: (data) => ({
-                url: `/auth/login`,
+                url: `v1/auth/login`,
                 method: "POST",
                 body: data,
             }),

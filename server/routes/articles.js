@@ -1,3 +1,5 @@
+const { getArticles, updateArticle, deleteArticle, getArticle, createArticle } = require("../controller/article");
+
 // article related routes
 const router = require("express").Router();
 

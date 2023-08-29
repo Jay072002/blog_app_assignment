@@ -1,4 +1,5 @@
-const { Schema, default: mongoose } = require("mongoose");
+const { default: mongoose } = require("mongoose");
+const Article = require("./Article")
 
 const userSchema = new mongoose.Schema(
     {
@@ -19,6 +20,15 @@ const userSchema = new mongoose.Schema(
 
 const User = mongoose.model("User", userSchema);
 
-module.exports = {
-    User
-}
+
+userSchema.pre('remove', async function (next) {
+    try {
+        console.log(this._id);
+        await Article.deleteMany({ author: this._id });
+        next();
+    } catch (error) {
+        next(error);
+    }
+});
+
+module.exports = User

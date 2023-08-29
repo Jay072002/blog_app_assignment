@@ -1,15 +1,13 @@
+const { getProfile, deleteProfile } = require("../controller/user");
+const { verifyToken, verifyTokenAndUser } = require("../middleware/verifyToken");
+
 const router = require("express").Router()
 
-// get all users
-// router.get("/", getUsers);
+// get profile by id
 
-// update user by id
-// router.put("/:id", updateUser);
+router.get("/:id", verifyToken, getProfile);
 
-// delete user by id
-// router.delete("/:id", deleteUser);
-
-// get user by id
-// router.get("/:id", getUser);
+// delete profile
+router.delete("/:id", verifyTokenAndUser, deleteProfile)
 
 module.exports = router;

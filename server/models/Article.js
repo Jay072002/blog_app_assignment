@@ -10,6 +10,10 @@ const articleSchema = new Schema(
             type: String,
             required: true
         },
+        category: {
+            type: String,
+            required: true
+        },
         // ref to the user table
         author: {
             type: Schema.Types.ObjectId,
@@ -22,6 +26,4 @@ const articleSchema = new Schema(
 
 const Article = mongoose.model("Article", articleSchema);
 
-module.exports = {
-    Article
-}
+module.exports = Article

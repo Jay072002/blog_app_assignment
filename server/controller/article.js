@@ -1,5 +1,5 @@
-const { infoLog, errorLog } = require("../helper/logHelper");
-const { Article } = require("../models/Article");
+const { infoLog, errorLog, successLog } = require("../helper/logHelper");
+const Article = require("../models/Article");
 
 const getArticles = async (req, res, next) => {
     try {
@@ -16,10 +16,10 @@ const getArticles = async (req, res, next) => {
 
 const createArticle = async (req, res, next) => {
     try {
-        const { title, content } = req.body;
+        const { title, content, category } = req.body;
         const { id } = req.user;
 
-        if (!title || !content) {
+        if (!title || !content || !category) {
             infoLog("createArticle exit");
             res.status(400).json({ articleCreated: false, message: "Error while creating article" });
             return errorLog("parameter missing");
@@ -28,6 +28,7 @@ const createArticle = async (req, res, next) => {
         const newArticle = new Article({
             title,
             content,
+            category,
             author: id
         });
 
@@ -35,6 +36,7 @@ const createArticle = async (req, res, next) => {
 
         res.status(201).json({ articleCreated: true, data: newArticle }); // Respond with the created article
     } catch (error) {
+        console.log(error);
         infoLog("createArticle exit");
         errorLog("Error while creating an article");
         next();
@@ -53,22 +55,8 @@ const updateArticle = async (req, res, next) => {
             return res.status(400).json({ articleUpdated: false, data: null });
         }
 
-        const article = await Article.findById(articleId);
 
-        if (!article) {
-            infoLog("updateArticle exit")
-            errorLog("Error while updating article")
-            return res.status(404).json({ message: 'Article not found' });
-        }
-
-        // Check if the current user is the author of the article
-        if (article.author.toString() !== id) {
-            infoLog("updateArticle exit")
-            errorLog("Error while updating the article")
-            return res.status(403).json({ message: 'You are not authorized to perform this action' });
-        }
-
-        const updatedArticle = await Article.findByIdAndUpdate(id, updateBody, { new: true });
+        const updatedArticle = await Article.findByIdAndUpdate(articleId, updateBody);
 
         res.status(200).json({ articleUpdated: true, data: updatedArticle });
 
@@ -100,21 +88,7 @@ const deleteArticle = async (req, res, next) => {
         const { id: articleId } = req.params;
         const { id } = req.user
 
-        const article = await Article.findById(articleId);
-
-        if (!article) {
-            infoLog("deleteArticle exit")
-            errorLog("Error while deleting article")
-            return res.status(404).json({ message: 'Article not found' });
-        }
-
-        if (article.author.toString() != id) {
-            infoLog("deleteArticle exit")
-            errorLog("Error while deleting the article")
-            return res.status(403).json({ message: 'You are not authorized to perform this action' });
-        }
-
-        await Article.findByIdAndDelete(id);
+        await Article.findByIdAndDelete(articleId);
 
         res.status(200).json({ articleDeleted: true });
     } catch (error) {
@@ -124,10 +98,31 @@ const deleteArticle = async (req, res, next) => {
     }
 };
 
+// Get articles by user ID
+const getUserArticles = async (req, res) => {
+    infoLog("getUserArticles entry")
+
+    const userId = req.params.userId;
+
+    try {
+        const articles = await Article.find({ author: userId });
+
+        infoLog("getUserArticles exit")
+        successLog("Successfullt fetched user's articles")
+        res.status(200).json({ fetchedUsersArticles: true, data: articles });
+    } catch (error) {
+        infoLog("getUserArticles exit")
+        errorLog("Error while fetching user's articles")
+        next()
+    }
+};
+
+
 module.exports = {
     getArticle,
     getArticles,
     createArticle,
     updateArticle,
-    deleteArticle
+    deleteArticle,
+    getUserArticles
 };

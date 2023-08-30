@@ -58,7 +58,12 @@ export default function Register() {
     const vertical = "top";
     const horizontal = "right";
     const navigate = useNavigate();
-    const [gender, setGender] = useState("");
+    const [formdata, setformdata] = useState({
+        username: "",
+        email: "",
+        password: "",
+        confirmpassword: "",
+    })
 
 
     const {
@@ -69,14 +74,21 @@ export default function Register() {
         // resolver: yupResolver(schema),
     });
 
-    const handleClick = () => {
-
-    }
 
     function TransitionLeft(props) {
         return <Slide {...props} direction="left" />;
     }
 
+    const handleSubmit = (e) => {
+
+    }
+
+    const handleInputChange = (e) => {
+        setformdata({
+            ...formdata,
+            [e.target.name]: e.target.value
+        })
+    }
     return (
         <>
             <Snackbar
@@ -129,7 +141,7 @@ export default function Register() {
                                             </Typography>
                                         </Box>
                                         <Box sx={{ mt: 2 }} />
-                                        <form >
+                                        <form action="/" onSubmit={handleSubmit} >
                                             <Grid container spacing={1}>
                                                 <Grid item xs={12}>
                                                     <TextField
@@ -137,7 +149,9 @@ export default function Register() {
                                                         fullWidth
                                                         label="Username"
                                                         size="small"
-                                                        name="username"
+                                                        name={"username"}
+                                                        onChange={handleInputChange}
+                                                        value={formdata.username}
                                                     />
                                                     {errors.username && (
                                                         <span style={{ color: "#f7d643", fontSize: "12px" }}>
@@ -152,7 +166,9 @@ export default function Register() {
                                                         label="Email"
                                                         type="email"
                                                         name="email"
+                                                        onChange={handleInputChange}
                                                         size="small"
+                                                        value={formdata.email}
                                                         {...register("email")}
                                                         aria-invalid={errors.email ? "true" : "false"}
                                                     />
@@ -170,7 +186,9 @@ export default function Register() {
                                                         label="Password"
                                                         type="password"
                                                         size="small"
+                                                        value={formdata.password}
                                                         id="password"
+                                                        onChange={handleInputChange}
                                                         autoComplete="new-password"
                                                     />
                                                     {errors.password && (
@@ -187,8 +205,10 @@ export default function Register() {
                                                         label="Confirm Password"
                                                         type="password"
                                                         size="small"
+                                                        value={formdata.confirmpassword}
                                                         id="confirmpassword"
                                                         autoComplete="new-password"
+                                                        onChange={handleInputChange}
                                                     />
                                                     {errors.password && (
                                                         <span style={{ color: "#f7d643", fontSize: "12px" }}>
@@ -204,7 +224,6 @@ export default function Register() {
                                                         variant="contained"
                                                         fullWidth="true"
                                                         size="large"
-                                                        onClick={handleClick}
                                                         sx={{
                                                             mt: "15px",
                                                             mr: "20px",

@@ -12,6 +12,7 @@ const filterArticles = async (req, res, next) => {
             category: { $regex: `^${searchTerm}`, $options: 'i' },
         });
 
+
         infoLog("filterArticles exit")
         successLog("Successfully filtered the articles")
         res.status(200).json({ articleFiltered: true, data: filteredArticles })

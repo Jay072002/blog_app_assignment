@@ -2,10 +2,13 @@ const { infoLog, errorLog, successLog } = require("../helper/logHelper");
 const Article = require("../models/Article");
 
 const getArticles = async (req, res, next) => {
+    infoLog("getArticles entry")
     try {
         const articles = await Article.find()
             .populate('author', 'username');
 
+        infoLog("getArticles exit")
+        successLog("Successfully fetched articles")
         res.status(200).json({ allArticles: true, data: articles }); // Fixed the response syntax here
     } catch (error) {
         infoLog("getArticles exit");
@@ -15,6 +18,7 @@ const getArticles = async (req, res, next) => {
 };
 
 const createArticle = async (req, res, next) => {
+    infoLog("createArticle entry")
     try {
         const { title, content, category } = req.body;
         const { id } = req.user;
@@ -34,6 +38,9 @@ const createArticle = async (req, res, next) => {
 
         await newArticle.save(); // Save the new article to the database
 
+        infoLog("createArticle exit")
+        successLog("Successfully created article")
+
         res.status(201).json({ articleCreated: true, data: newArticle }); // Respond with the created article
     } catch (error) {
         console.log(error);
@@ -44,6 +51,7 @@ const createArticle = async (req, res, next) => {
 };
 
 const updateArticle = async (req, res, next) => {
+    infoLog("updateArticle entry")
     try {
         const updateBody = req.body;
         const { id } = req.user;
@@ -57,6 +65,9 @@ const updateArticle = async (req, res, next) => {
 
 
         const updatedArticle = await Article.findByIdAndUpdate(articleId, updateBody);
+
+        infoLog("updateArticle exit")
+        successLog("Successfully updated article")
 
         res.status(200).json({ articleUpdated: true, data: updatedArticle });
 
@@ -83,12 +94,18 @@ const getArticle = async (req, res, next) => {
 };
 
 const deleteArticle = async (req, res, next) => {
+
+    infoLog("deleteArticle entry")
+
     try {
         // Implement delete logic here
         const { id: articleId } = req.params;
         const { id } = req.user
 
         await Article.findByIdAndDelete(articleId);
+
+        infoLog("deleteArticle entry")
+        successLog("Successfully deleted article")
 
         res.status(200).json({ articleDeleted: true });
     } catch (error) {

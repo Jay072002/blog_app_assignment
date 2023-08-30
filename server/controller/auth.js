@@ -58,7 +58,6 @@ const registerUser = async (req, res, next) => {
         infoLog("registerUser exit");
         errorLog("Error While Registration!");
         next();
-        // return res.status(500).json({ isRegister: false, message: "Internal Server Error" });
     }
 };
 
@@ -109,7 +108,6 @@ const loginUser = async (req, res, next) => {
         console.log(error);
         errorLog("error while login the user");
         next()
-        // return res.status(500).json({ isLogin: false });
     }
 };
 

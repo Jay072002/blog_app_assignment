@@ -8,7 +8,7 @@ const router = require("express").Router();
 router.get("/", getArticles);
 
 // update article by id
-router.put("/:id", verifyTokenAndUser, updateArticle);
+router.patch("/:id", verifyTokenAndUser, updateArticle);
 
 // delete article by id
 router.delete("/:id", verifyTokenAndUser, deleteArticle);

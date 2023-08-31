@@ -16,6 +16,7 @@ import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 // import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
+import axios from "axios";
 
 const schema = yup
     .object({
@@ -66,6 +67,15 @@ export default function Register() {
     })
 
 
+    const handleRegister = async () => {
+        try {
+            await axios.post("http://localhost:5000/api/v1/auth/register", formdata)
+            navigate("/login")
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
     const {
         register,
 
@@ -84,11 +94,13 @@ export default function Register() {
     }
 
     const handleInputChange = (e) => {
+        console.log(e.target, "e");
         setformdata({
             ...formdata,
             [e.target.name]: e.target.value
         })
     }
+
     return (
         <>
             <Snackbar
@@ -169,14 +181,14 @@ export default function Register() {
                                                         onChange={handleInputChange}
                                                         size="small"
                                                         value={formdata.email}
-                                                        {...register("email")}
-                                                        aria-invalid={errors.email ? "true" : "false"}
+                                                    // {...register("email")}
+                                                    // aria-invalid={errors.email ? "true" : "false"}
                                                     />
-                                                    {errors.email && (
+                                                    {/* {errors.email && (
                                                         <span style={{ color: "#f7d643", fontSize: "12px" }}>
                                                             {errors.email?.message}
                                                         </span>
-                                                    )}
+                                                    )} */}
                                                 </Grid>
                                                 <Grid item xs={6}>
                                                     <TextField
@@ -224,6 +236,7 @@ export default function Register() {
                                                         variant="contained"
                                                         fullWidth="true"
                                                         size="large"
+                                                        onClick={handleRegister}
                                                         sx={{
                                                             mt: "15px",
                                                             mr: "20px",

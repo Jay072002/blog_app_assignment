@@ -10,7 +10,19 @@ const app = express();
 
 // express middlewares
 app.use(express.json());
-app.use(cors());
+const allowedOrigins = ["http://localhost:3000"]; // Replace with your frontend URL
+app.use(
+    cors({
+        origin: function (origin, callback) {
+            if (allowedOrigins.includes(origin) || !origin) {
+                callback(null, true);
+            } else {
+                callback(new Error("Not allowed by CORS"));
+            }
+        },
+        credentials: true, // Allow credentials (cookies, etc.)
+    })
+);
 app.use(cookieParser()); // Parse cookie headers
 
 // define app routes
@@ -37,24 +49,12 @@ app.use((err, req, res, next) => {
 });
 
 
-const connectToDB = async () => {
-    await mongoose.connect(process.env.MONGO_URI, {
-        useNewUrlParser: true,
-        useUnifiedTopology: true,
-    })
-}
-
-connectToDB().then(() => {
-    console.log("connected")
-});
-
-
 // server setup and db connection build
 const PORT = process.env.PORT;
 (async () => {
     try {
-        // await connectDB(process.env.MONGO_URI); // Connect to the MongoDB database
-        // console.log("CONNECTED TO DB SUCCESSFULLY..!");
+        await connectDB(process.env.MONGO_URI); // Connect to the MongoDB database
+        console.log("CONNECTED TO DB SUCCESSFULLY..!");
 
         app.listen(PORT, () => {
             console.log(`server is running and listening on port ${PORT}`);

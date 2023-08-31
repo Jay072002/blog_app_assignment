@@ -1,0 +1,5 @@
+.username:hover {
+    /* font-weight: 600; */
+    color: rgb(85, 80, 80);
+    transition: 0.2s;
+}

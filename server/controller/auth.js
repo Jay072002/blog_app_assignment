@@ -98,12 +98,11 @@ const loginUser = async (req, res, next) => {
             username: isRegistered.username,
             email: isRegistered.email,
         });
-
         res.cookie("token", token, { maxAge: 60 * 60 * 24 * 1000 });
 
         successLog("Successfully LoggedIn!");
         infoLog("loginUser exit");
-        return res.status(200).json({ isLogin: true });
+        return res.status(200).json({ isLogin: true, token: token, user: isRegistered });
     } catch (error) {
         console.log(error);
         errorLog("error while login the user");

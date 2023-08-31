@@ -19,6 +19,8 @@ const getArticles = async (req, res, next) => {
 
 const createArticle = async (req, res, next) => {
     infoLog("createArticle entry")
+
+    console.log(req.body);
     try {
         const { title, content, category } = req.body;
         const { id } = req.user;
@@ -116,7 +118,7 @@ const deleteArticle = async (req, res, next) => {
 };
 
 // Get articles by user ID
-const getUserArticles = async (req, res) => {
+const getUserArticles = async (req, res, next) => {
     infoLog("getUserArticles entry")
 
     const userId = req.params.userId;

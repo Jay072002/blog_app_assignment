@@ -18,6 +18,10 @@ import MuiAlert from "@mui/material/Alert";
 import Slide from "@mui/material/Slide";
 import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
+import axios from "axios";
+import Cookies from "js-cookie";
+import { useAppState } from "../AppContext";
+
 
 const Alert = forwardRef(function Alert(props, ref) {
     return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
@@ -53,6 +57,13 @@ export default function Login() {
     const horizontal = "right";
     const navigate = useNavigate();
 
+    const { user, setUser } = useAppState()
+
+    const [formData, setFormData] = useState({
+        "username": "",
+        "password": ""
+    })
+
     const {
         register,
         handleSubmit,
@@ -60,10 +71,20 @@ export default function Login() {
         formState: { errors },
     } = useForm();
 
-    const onSubmit = async (data) => {
-        console.log(data);
+    const onSubmit = async (e) => {
+        e.preventDefault();
+
+
+        const { data } = await axios.post('http://localhost:5000/api/v1/auth/login', formData)
+
+        setUser(data?.user)
+
+        Cookies.set("token", data.token, { expires: 7 }); // Cookie expires in 7 days
+
+        navigate("/article")
         setOpen(true);
     };
+
 
     const handleClose = (event, reason) => {
         if (reason === "clickaway") {
@@ -135,7 +156,7 @@ export default function Login() {
                                             </Typography>
                                         </Box>
                                         <Box sx={{ mt: 2 }} />
-                                        <form onSubmit={handleSubmit(onSubmit)}>
+                                        <form onSubmit={(e) => onSubmit(e)}>
                                             <Grid container spacing={1}>
                                                 <Grid item xs={12} sx={{ ml: "3em", mr: "3em" }}>
                                                     <TextField
@@ -145,6 +166,7 @@ export default function Login() {
                                                         label="Username"
                                                         name="email"
                                                         autoComplete="email"
+                                                        onChange={(e) => setFormData({ ...formData, username: e.target.value })}
                                                     />
                                                     {errors.email && (
                                                         <span
@@ -163,6 +185,7 @@ export default function Login() {
                                                         type="password"
                                                         id="password"
                                                         autoComplete="new-password"
+                                                        onChange={(e) => setFormData({ ...formData, password: e.target.value })}
                                                     />
                                                     {errors.password && (
                                                         <span

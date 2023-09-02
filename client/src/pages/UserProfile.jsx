@@ -16,7 +16,7 @@ const UserProfile = () => {
     const article = location.state?.article;
 
     const { user, refresh } = useAppState()
-
+    const [createFlag, setCreateFlag] = useState(false)
     const { userId } = useParams()
 
 
@@ -43,6 +43,11 @@ const UserProfile = () => {
         }).catch(error => console.log(error))
     }, [open, isDeleted, refresh])
 
+    const handleCreateArticle = () => {
+        setCreateFlag(true);
+        setOpen(true)
+    }
+
 
     return (
         <>
@@ -52,8 +57,12 @@ const UserProfile = () => {
                 {userArticles?.map((article, index) => {
                     return <Article article={article} flag={true} key={index} open={open} setOpen={setOpen} setIsDeleted={setIsDeleted} createFlag={false} setCreateFlag={false} />
                 })}
-            </div> : <div style={{ display: "flex", justifyContent: "center", "alignItems": "center", height: "90vh", fontWeight: "bold", fontSize: "3rem", letterSpacing: "2px" }}>No Articles Posted..!</div>}
+            </div> : <div style={{ display: "flex", justifyContent: "center", "alignItems": "center", height: "90vh", fontWeight: "bold", fontSize: "3rem", letterSpacing: "2px", flexDirection: "column" }}>
+                <div>No Articles Posted..!</div>
+                <Button style={{ margin: "10px 0", fontSize: "1.1rem" }} onClick={() => handleCreateArticle()}>Create Article <span style={{ fontSize: "2rem", margin: "0 6px" }}>+</span></Button >
+            </div>}
 
+            {createFlag ? <Modal open={open} setOpen={setOpen} article={null} createFlag={createFlag} setCreateFlag={setCreateFlag} /> : null}
 
         </>
     )

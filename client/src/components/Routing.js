@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { Route, Routes, useLocation } from "react-router-dom";
+import { Navigate, Route, Routes, useLocation } from "react-router-dom";
 import Layout from "./layout/Layout.js";
 import Login from "../pages/Login.jsx";
 import Register from "../pages/Register.jsx";
@@ -36,14 +36,14 @@ function Routing() {
           exact
           path={'/article'}
           element={
-            isLogin ? <ArticlePage /> : <Login />
+            isLogin ? <ArticlePage /> : <Navigate to="/login" />
           }
         />
         <Route
           exact
           path={'/profile/:userId'}
           element={
-            isLogin ? <UserProfile /> : <Login />
+            isLogin ? <UserProfile /> : <Navigate to="/login" />
           }
         />
         <Route

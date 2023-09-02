@@ -21,6 +21,7 @@ import { useForm } from "react-hook-form";
 import axios from "axios";
 import Cookies from "js-cookie";
 import { useAppState } from "../AppContext";
+import { toast } from "react-hot-toast";
 
 
 const Alert = forwardRef(function Alert(props, ref) {
@@ -72,17 +73,30 @@ export default function Login() {
     } = useForm();
 
     const onSubmit = async (e) => {
-        e.preventDefault();
+
+        try {
+
+            e.preventDefault();
 
 
-        const { data } = await axios.post('http://localhost:5000/api/v1/auth/login', formData)
+            const { data } = await axios.post('http://localhost:5000/api/v1/auth/login', formData)
 
-        setUser(data?.user)
+            setUser(data?.user)
 
-        Cookies.set("token", data.token, { expires: 7 }); // Cookie expires in 7 days
+            Cookies.set("token", data.token, { expires: 7 }); // Cookie expires in 7 days
 
-        navigate("/article")
-        setOpen(true);
+            navigate("/article")
+            setOpen(true);
+        } catch (error) {
+            return toast.error("User Not Exist!.", {
+                style: {
+                    padding: "16px",
+                    animationDuration: "2s",
+                },
+            });
+        }
+
+
     };
 
 

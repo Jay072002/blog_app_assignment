@@ -16,6 +16,7 @@ import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 // import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
+import toast from "react-hot-toast"
 import axios from "axios";
 
 const schema = yup
@@ -67,15 +68,6 @@ export default function Register() {
     })
 
 
-    const handleRegister = async () => {
-        try {
-            await axios.post("http://localhost:5000/api/v1/auth/register", formdata)
-            navigate("/login")
-        } catch (error) {
-            console.log(error);
-        }
-    }
-
     const {
         register,
 
@@ -89,9 +81,22 @@ export default function Register() {
         return <Slide {...props} direction="left" />;
     }
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
+        e.preventDefault(); // Prevent the default form submission behavior
 
+        try {
+            await axios.post("http://localhost:5000/api/v1/auth/register", formdata);
+            navigate("/login");
+        } catch (error) {
+            return toast.error("Something Went Wrong!.", {
+                style: {
+                    padding: "16px",
+                    animationDuration: "2s",
+                },
+            });
+        }
     }
+
 
     const handleInputChange = (e) => {
         console.log(e.target, "e");
@@ -153,7 +158,7 @@ export default function Register() {
                                             </Typography>
                                         </Box>
                                         <Box sx={{ mt: 2 }} />
-                                        <form action="/" onSubmit={handleSubmit} >
+                                        <form onSubmit={handleSubmit} >
                                             <Grid container spacing={1}>
                                                 <Grid item xs={12}>
                                                     <TextField
@@ -236,7 +241,6 @@ export default function Register() {
                                                         variant="contained"
                                                         fullWidth="true"
                                                         size="large"
-                                                        onClick={handleRegister}
                                                         sx={{
                                                             mt: "15px",
                                                             mr: "20px",

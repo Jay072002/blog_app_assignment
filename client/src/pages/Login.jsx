@@ -58,7 +58,7 @@ export default function Login() {
     const horizontal = "right";
     const navigate = useNavigate();
 
-    const { user, setUser } = useAppState()
+    const { user, setUser, setIsLogin } = useAppState()
 
     const [formData, setFormData] = useState({
         "username": "",
@@ -84,9 +84,15 @@ export default function Login() {
             setUser(data?.user)
 
             Cookies.set("token", data.token, { expires: 7 }); // Cookie expires in 7 days
-
-            navigate("/article")
+            setIsLogin(true)
+            toast.success("login success!", {
+                style: {
+                    padding: "16px",
+                    animationDuration: "2s",
+                },
+            });
             setOpen(true);
+            navigate("/article")
         } catch (error) {
             return toast.error("User Not Exist!.", {
                 style: {

@@ -8,6 +8,7 @@ import DialogTitle from "@mui/material/DialogTitle";
 import TextField from "@mui/material/TextField";
 import axios from "axios";
 import { useAppState } from "../AppContext";
+import { toast } from "react-hot-toast";
 
 function Modal({ open, setOpen, article, createFlag, setCreateFlag }) {
     const [title, setTitle] = useState("");
@@ -46,10 +47,23 @@ function Modal({ open, setOpen, article, createFlag, setCreateFlag }) {
                 withCredentials: true
             })
 
+            toast.success("Article Updated successfully!", {
+                style: {
+                    padding: "16px",
+                    animationDuration: "2s",
+                },
+            });
+
             setOpen(false)
             setRefresh(Math.random() * 6000000);
         } catch (error) {
             console.log(error);
+            return toast.error("Failed to update the article. Please try again later.", {
+                style: {
+                    padding: "16px",
+                    animationDuration: "2s",
+                },
+            });
         }
 
     }
@@ -60,11 +74,23 @@ function Modal({ open, setOpen, article, createFlag, setCreateFlag }) {
                 const data = { title, content, category }
                 await axios.post("http://localhost:5000/api/v1/article", data, { withCredentials: true })
                 console.log("article created");
+                toast.success("Article created successfully!", {
+                    style: {
+                        padding: "16px",
+                        animationDuration: "2s",
+                    },
+                });
                 setOpen(false)
                 setRefresh(Math.random() * 6000000);
             }
         } catch (error) {
             console.log(error);
+            return toast.error("Failed to create the article. Please try again later.", {
+                style: {
+                    padding: "16px",
+                    animationDuration: "2s",
+                },
+            });
         }
     }
 

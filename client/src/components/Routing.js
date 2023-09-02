@@ -6,9 +6,13 @@ import Register from "../pages/Register.jsx";
 import ArticlePage from "../pages/ArticlePage.jsx";
 import UserProfile from "../pages/UserProfile.jsx";
 import Home from "../pages/Home.jsx";
+import { useAppState } from "../AppContext.jsx";
+
 
 
 function Routing() {
+
+  const { isLogin } = useAppState()
 
 
   return (
@@ -32,14 +36,14 @@ function Routing() {
           exact
           path={'/article'}
           element={
-            <ArticlePage />
+            isLogin ? <ArticlePage /> : <Login />
           }
         />
         <Route
           exact
           path={'/profile/:userId'}
           element={
-            <UserProfile />
+            isLogin ? <UserProfile /> : <Login />
           }
         />
         <Route

@@ -11,8 +11,9 @@ export const useAppState = () => useContext(AppStateContext);
 export const AppStateProvider = ({ children }) => {
     const [user, setUser] = useState({})
     const [refresh, setRefresh] = useState(0);
+    const [isLogin, setIsLogin] = useState(false)
     return (
-        <AppStateContext.Provider value={{ user, setUser, refresh, setRefresh }}>
+        <AppStateContext.Provider value={{ user, setUser, refresh, setRefresh, isLogin, setIsLogin }}>
             {children}
         </AppStateContext.Provider>
     );
